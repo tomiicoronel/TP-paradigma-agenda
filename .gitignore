@@ -1,0 +1,6 @@
+/data/
+/out/
+*.log
+*.iml
+.idea/
+*.class
