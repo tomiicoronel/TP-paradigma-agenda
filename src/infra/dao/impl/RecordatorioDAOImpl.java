@@ -8,6 +8,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class RecordatorioDAOImpl implements RecordatorioDAO {
 
@@ -31,13 +32,127 @@ public class RecordatorioDAOImpl implements RecordatorioDAO {
 
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
-                    return rs.getLong(1);
+                    Long id = rs.getLong(1);
+                    r.setId(id);
+                    return id;
                 }
             }
             throw new RuntimeException("No se generó ID para recordatorio");
 
         } catch (SQLException e) {
             throw new RuntimeException("Error creando recordatorio: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void update(Recordatorio r) {
+        String sql = "UPDATE recordatorio SET estado = ?, motivo_estado = ? WHERE id = ?";
+
+        try (Connection cn = ConexionDB.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setString(1, r.getEstado());
+            ps.setString(2, r.getMotivoEstado());
+            ps.setLong(3, r.getId());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error actualizando recordatorio: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Optional<Recordatorio> findById(Long id) {
+        String sql = "SELECT id, paciente_id, tipo, referencia_tipo, referencia_id, " +
+                     "programado_at, ventana_min, estado, motivo_estado " +
+                     "FROM recordatorio WHERE id = ?";
+
+        try (Connection cn = ConexionDB.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setLong(1, id);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(mapRow(rs));
+                }
+            }
+            return Optional.empty();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error buscando recordatorio: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<Recordatorio> findAll() {
+        String sql = "SELECT id, paciente_id, tipo, referencia_tipo, referencia_id, " +
+                     "programado_at, ventana_min, estado, motivo_estado " +
+                     "FROM recordatorio ORDER BY programado_at DESC";
+
+        List<Recordatorio> resultado = new ArrayList<>();
+
+        try (Connection cn = ConexionDB.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                resultado.add(mapRow(rs));
+            }
+            return resultado;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error listando recordatorios: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<Recordatorio> findByEstado(String estado) {
+        String sql = "SELECT id, paciente_id, tipo, referencia_tipo, referencia_id, " +
+                     "programado_at, ventana_min, estado, motivo_estado " +
+                     "FROM recordatorio WHERE estado = ? ORDER BY programado_at";
+
+        List<Recordatorio> resultado = new ArrayList<>();
+
+        try (Connection cn = ConexionDB.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setString(1, estado);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    resultado.add(mapRow(rs));
+                }
+            }
+            return resultado;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error buscando recordatorios por estado: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<Recordatorio> findByPacienteId(Long pacienteId) {
+        String sql = "SELECT id, paciente_id, tipo, referencia_tipo, referencia_id, " +
+                     "programado_at, ventana_min, estado, motivo_estado " +
+                     "FROM recordatorio WHERE paciente_id = ? ORDER BY programado_at DESC";
+
+        List<Recordatorio> resultado = new ArrayList<>();
+
+        try (Connection cn = ConexionDB.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setLong(1, pacienteId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    resultado.add(mapRow(rs));
+                }
+            }
+            return resultado;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error listando recordatorios por paciente: " + e.getMessage(), e);
         }
     }
 

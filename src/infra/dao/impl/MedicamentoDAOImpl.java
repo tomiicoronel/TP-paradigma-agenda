@@ -7,6 +7,7 @@ import infra.db.ConexionDB;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MedicamentoDAOImpl implements MedicamentoDAO {
 
@@ -24,7 +25,9 @@ public class MedicamentoDAOImpl implements MedicamentoDAO {
 
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
-                    return rs.getLong(1);
+                    Long id = rs.getLong(1);
+                    m.setId(id);
+                    return id;
                 }
             }
             throw new RuntimeException("No se generó ID para medicamento");
@@ -66,7 +69,7 @@ public class MedicamentoDAOImpl implements MedicamentoDAO {
     }
 
     @Override
-    public Medicamento findById(Long id) {
+    public Optional<Medicamento> findById(Long id) {
         String sql = "SELECT id, nombre, via, unidad_dosis, notas FROM medicamento WHERE id = ?";
         try (Connection cn = ConexionDB.getConnection();
              PreparedStatement ps = cn.prepareStatement(sql)) {
@@ -74,10 +77,10 @@ public class MedicamentoDAOImpl implements MedicamentoDAO {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return mapRow(rs);
+                    return Optional.of(mapRow(rs));
                 }
             }
-            return null;
+            return Optional.empty();
 
         } catch (SQLException e) {
             throw new RuntimeException("Error buscando medicamento: " + e.getMessage(), e);
@@ -105,6 +108,25 @@ public class MedicamentoDAOImpl implements MedicamentoDAO {
         }
     }
 
+    @Override
+    public List<Medicamento> findAll() {
+        String sql = "SELECT id, nombre, via, unidad_dosis, notas FROM medicamento ORDER BY nombre";
+        List<Medicamento> resultado = new ArrayList<>();
+
+        try (Connection cn = ConexionDB.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                resultado.add(mapRow(rs));
+            }
+            return resultado;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error listando medicamentos: " + e.getMessage(), e);
+        }
+    }
+
     private Medicamento mapRow(ResultSet rs) throws SQLException {
         Medicamento m = new Medicamento();
         m.setId(rs.getLong("id"));
@@ -115,4 +137,3 @@ public class MedicamentoDAOImpl implements MedicamentoDAO {
         return m;
     }
 }
-

@@ -5,10 +5,12 @@ import java.time.LocalDateTime;
 public class Recordatorio {
     private Long id;
     private Long pacienteId;
+    private Long medicamentoId; // Para acceso rápido en queries
     private String tipo; // MEDICACION | ACTIVIDAD | TURNO
     private String referenciaTipo; // PAC_MED | ITEM_RUTINA
     private Long referenciaId;
     private LocalDateTime programadoAt;
+    private LocalDateTime realizadoAt; // Cuando se marcó como HECHO
     private int ventanaMin;
     private String estado; // PENDIENTE | APLAZADO | PERDIDO | HECHO
     private String motivoEstado;
@@ -21,6 +23,9 @@ public class Recordatorio {
     public Long getPacienteId() { return pacienteId; }
     public void setPacienteId(Long pacienteId) { this.pacienteId = pacienteId; }
 
+    public Long getMedicamentoId() { return medicamentoId; }
+    public void setMedicamentoId(Long medicamentoId) { this.medicamentoId = medicamentoId; }
+
     public String getTipo() { return tipo; }
     public void setTipo(String tipo) { this.tipo = tipo; }
 
@@ -32,6 +37,9 @@ public class Recordatorio {
 
     public LocalDateTime getProgramadoAt() { return programadoAt; }
     public void setProgramadoAt(LocalDateTime programadoAt) { this.programadoAt = programadoAt; }
+
+    public LocalDateTime getRealizadoAt() { return realizadoAt; }
+    public void setRealizadoAt(LocalDateTime realizadoAt) { this.realizadoAt = realizadoAt; }
 
     public int getVentanaMin() { return ventanaMin; }
     public void setVentanaMin(int ventanaMin) { this.ventanaMin = ventanaMin; }

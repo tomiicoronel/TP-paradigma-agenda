@@ -27,13 +27,60 @@ public class AdherenciaDAOImpl implements AdherenciaDAO {
 
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
-                    return rs.getLong(1);
+                    Long id = rs.getLong(1);
+                    a.setId(id);
+                    return id;
                 }
             }
             throw new RuntimeException("No se generó ID para adherencia");
 
         } catch (SQLException e) {
             throw new RuntimeException("Error registrando adherencia: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<Adherencia> findAll() {
+        String sql = "SELECT id, recordatorio_id, registrada_at, accion, observaciones " +
+                     "FROM adherencia ORDER BY registrada_at DESC";
+
+        List<Adherencia> resultado = new ArrayList<>();
+
+        try (Connection cn = ConexionDB.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                resultado.add(mapRow(rs));
+            }
+            return resultado;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error listando adherencias: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<Adherencia> findByRecordatorioId(Long recordatorioId) {
+        String sql = "SELECT id, recordatorio_id, registrada_at, accion, observaciones " +
+                     "FROM adherencia WHERE recordatorio_id = ? ORDER BY registrada_at";
+
+        List<Adherencia> resultado = new ArrayList<>();
+
+        try (Connection cn = ConexionDB.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setLong(1, recordatorioId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    resultado.add(mapRow(rs));
+                }
+            }
+            return resultado;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error buscando adherencias por recordatorio: " + e.getMessage(), e);
         }
     }
 

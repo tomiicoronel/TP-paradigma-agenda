@@ -3,6 +3,9 @@ package domain;
 public class Medicamento {
     private Long id;
     private String nombre;
+    private String nombreComercial; // Alias para nombre
+    private String droga; // Principio activo
+    private String presentacion; // Forma farmacéutica
     private String via;
     private String unidadDosis;
     private String notas;
@@ -21,7 +24,22 @@ public class Medicamento {
     public void setId(Long id) { this.id = id; }
 
     public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+        this.nombreComercial = nombre; // Sincronizar
+    }
+
+    public String getNombreComercial() { return nombreComercial != null ? nombreComercial : nombre; }
+    public void setNombreComercial(String nombreComercial) {
+        this.nombreComercial = nombreComercial;
+        this.nombre = nombreComercial; // Sincronizar
+    }
+
+    public String getDroga() { return droga; }
+    public void setDroga(String droga) { this.droga = droga; }
+
+    public String getPresentacion() { return presentacion; }
+    public void setPresentacion(String presentacion) { this.presentacion = presentacion; }
 
     public String getVia() { return via; }
     public void setVia(String via) { this.via = via; }

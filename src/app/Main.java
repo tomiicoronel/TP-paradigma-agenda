@@ -8,7 +8,7 @@ Tarea: Bootstrap de app, init de DB, apertura de UI.
 
 import infra.db.ConexionDB;
 import infra.db.VerificarDB;
-import ui.MainFrame;
+import ui.CLI;
 
 public class Main {
     public static void main(String[] args) {
@@ -23,11 +23,11 @@ public class Main {
         // TODO: lanzar scheduler (controller.TomaService)
         // new TomaService().start();
 
-        // UI
-        System.out.println("→ Lanzando interfaz gráfica...");
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            MainFrame frame = new MainFrame();
-            frame.setVisible(true);
-        });
+        // Lanzar CLI
+        System.out.println("→ Lanzando interfaz de línea de comandos...\n");
+        CLI cli = new CLI();
+        cli.iniciar();
+
+        System.out.println("=== Aplicación finalizada ===");
     }
 }

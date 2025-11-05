@@ -8,8 +8,14 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class PacienteMedicamentoDAOImpl implements PacienteMedicamentoDAO {
+
+    @Override
+    public void save(PacienteMedicamento pm) {
+        savePauta(pm);
+    }
 
     @Override
     public void savePauta(PacienteMedicamento pm) {
@@ -37,6 +43,12 @@ public class PacienteMedicamentoDAOImpl implements PacienteMedicamentoDAO {
     }
 
     @Override
+    public Optional<PacienteMedicamento> findById(Long pacienteId, Long medicamentoId) {
+        PacienteMedicamento pm = findByPacienteYMedicamento(pacienteId, medicamentoId);
+        return Optional.ofNullable(pm);
+    }
+
+    @Override
     public PacienteMedicamento findByPacienteYMedicamento(Long pacienteId, Long medicamentoId) {
         String sql = "SELECT paciente_id, medicamento_id, dosis, unidad, intervalo_min, ventana_min, " +
                      "hora_inicio, proxima_toma_at, activo " +
@@ -57,6 +69,32 @@ public class PacienteMedicamentoDAOImpl implements PacienteMedicamentoDAO {
 
         } catch (SQLException e) {
             throw new RuntimeException("Error buscando pauta: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<PacienteMedicamento> findByPacienteId(Long pacienteId) {
+        String sql = "SELECT paciente_id, medicamento_id, dosis, unidad, intervalo_min, ventana_min, " +
+                     "hora_inicio, proxima_toma_at, activo " +
+                     "FROM paciente_medicamento WHERE paciente_id = ? " +
+                     "ORDER BY proxima_toma_at";
+
+        List<PacienteMedicamento> resultado = new ArrayList<>();
+
+        try (Connection cn = ConexionDB.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setLong(1, pacienteId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    resultado.add(mapRow(rs));
+                }
+            }
+            return resultado;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error listando pautas de paciente: " + e.getMessage(), e);
         }
     }
 

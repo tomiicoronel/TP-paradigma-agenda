@@ -1,8 +1,12 @@
 package domain;
 
+import java.time.LocalDate;
+
 public class Paciente {
     private Long id;
     private String nombre;
+    private LocalDate fechaNacimiento;
+    private String diagnostico;
     private String preferenciasAccesibilidad;
     private Long cuidadorId;
 
@@ -20,6 +24,12 @@ public class Paciente {
 
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public LocalDate getFechaNacimiento() { return fechaNacimiento; }
+    public void setFechaNacimiento(LocalDate fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
+
+    public String getDiagnostico() { return diagnostico; }
+    public void setDiagnostico(String diagnostico) { this.diagnostico = diagnostico; }
 
     public String getPreferenciasAccesibilidad() { return preferenciasAccesibilidad; }
     public void setPreferenciasAccesibilidad(String preferenciasAccesibilidad) {

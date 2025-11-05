@@ -7,6 +7,7 @@ import infra.db.ConexionDB;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class PacienteDAOImpl implements PacienteDAO {
 
@@ -23,7 +24,9 @@ public class PacienteDAOImpl implements PacienteDAO {
 
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
-                    return rs.getLong(1);
+                    Long id = rs.getLong(1);
+                    p.setId(id);
+                    return id;
                 }
             }
             throw new RuntimeException("No se generó ID para paciente");
@@ -64,7 +67,7 @@ public class PacienteDAOImpl implements PacienteDAO {
     }
 
     @Override
-    public Paciente findById(Long id) {
+    public Optional<Paciente> findById(Long id) {
         String sql = "SELECT id, nombre, preferencias_accesibilidad, cuidador_id FROM paciente WHERE id = ?";
         try (Connection cn = ConexionDB.getConnection();
              PreparedStatement ps = cn.prepareStatement(sql)) {
@@ -72,10 +75,10 @@ public class PacienteDAOImpl implements PacienteDAO {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return mapRow(rs);
+                    return Optional.of(mapRow(rs));
                 }
             }
-            return null;
+            return Optional.empty();
 
         } catch (SQLException e) {
             throw new RuntimeException("Error buscando paciente: " + e.getMessage(), e);
@@ -103,6 +106,25 @@ public class PacienteDAOImpl implements PacienteDAO {
         }
     }
 
+    @Override
+    public List<Paciente> findAll() {
+        String sql = "SELECT id, nombre, preferencias_accesibilidad, cuidador_id FROM paciente ORDER BY nombre";
+        List<Paciente> resultado = new ArrayList<>();
+
+        try (Connection cn = ConexionDB.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                resultado.add(mapRow(rs));
+            }
+            return resultado;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error listando pacientes: " + e.getMessage(), e);
+        }
+    }
+
     private Paciente mapRow(ResultSet rs) throws SQLException {
         Paciente p = new Paciente();
         p.setId(rs.getLong("id"));
@@ -112,4 +134,3 @@ public class PacienteDAOImpl implements PacienteDAO {
         return p;
     }
 }
-
