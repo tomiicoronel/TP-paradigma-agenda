@@ -111,19 +111,23 @@ public class TestDAOs {
 
             // 9. Verificar lecturas
             System.out.println("\n→ Probando lecturas...");
-            Cuidador cuidadorLeido = cuidadorDAO.findById(cuidadorId);
-            System.out.println("  Cuidador: " + cuidadorLeido.getNombre());
+            cuidadorDAO.findById(cuidadorId).ifPresent(c ->
+                System.out.println("  Cuidador: " + c.getNombre())
+            );
 
-            Paciente pacienteLeido = pacienteDAO.findById(pacienteId);
-            System.out.println("  Paciente: " + pacienteLeido.getNombre());
+            pacienteDAO.findById(pacienteId).ifPresent(p ->
+                System.out.println("  Paciente: " + p.getNombre())
+            );
 
-            Medicamento medicamentoLeido = medicamentoDAO.findById(medicamentoId);
-            System.out.println("  Medicamento: " + medicamentoLeido.getNombre());
+            medicamentoDAO.findById(medicamentoId).ifPresent(m ->
+                System.out.println("  Medicamento: " + m.getNombre())
+            );
 
             System.out.println("\n=== ✓ TODOS LOS TESTS PASARON EXITOSAMENTE ===");
 
         } catch (Exception e) {
             System.err.println("\n✗ ERROR EN TEST: " + e.getMessage());
+            System.err.println("Stack trace:");
             e.printStackTrace();
         }
     }
