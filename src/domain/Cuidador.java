@@ -6,6 +6,7 @@ public class Cuidador {
     private String email;
     private String telefono;
     private String contacto; // Campo original del schema
+    private String relacion; // Relación con el paciente (ej: familiar, enfermero, etc.)
 
     public Cuidador() {}
 
@@ -29,4 +30,7 @@ public class Cuidador {
 
     public String getContacto() { return contacto; }
     public void setContacto(String contacto) { this.contacto = contacto; }
+
+    public String getRelacion() { return relacion; }
+    public void setRelacion(String relacion) { this.relacion = relacion; }
 }

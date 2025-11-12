@@ -1,5 +1,8 @@
 package ui.panels;
 
+import domain.Cuidador;
+import domain.Medicamento;
+import domain.Paciente;
 import service.CuidadorService;
 import service.MedicamentoService;
 import service.PacienteService;
@@ -9,6 +12,7 @@ import ui.forms.FormPaciente;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 /**
  * Panel de gestion con botones para abrir formularios de creacion.
@@ -91,7 +95,7 @@ public class PanelGestion extends JPanel {
 
         add(panelCentral, BorderLayout.CENTER);
 
-        // Footer con instrucciones
+        // Footer
         JLabel lblInstrucciones = new JLabel(
             "<html><center>Utiliza estos formularios para gestionar los datos basicos del sistema.<br>" +
             "Luego podras configurar pautas de medicacion en la pestana correspondiente.</center></html>"
@@ -132,7 +136,7 @@ public class PanelGestion extends JPanel {
 
     private void mostrarListaPacientes() {
         try {
-            var pacientes = pacienteService.listarTodos();
+            List<Paciente> pacientes = pacienteService.listarTodos();
             if (pacientes.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
                     "No hay pacientes registrados todavia.",
@@ -141,20 +145,24 @@ public class PanelGestion extends JPanel {
                 return;
             }
 
-            StringBuilder sb = new StringBuilder("<html><body>");
+            StringBuilder sb = new StringBuilder("<html><body style='padding:10px'>");
             sb.append("<h2>Pacientes Registrados</h2>");
-            sb.append("<table border='1' cellpadding='5'>");
-            sb.append("<tr><th>ID</th><th>Nombre</th><th>Edad</th></tr>");
+            sb.append("<table border='1' cellpadding='8' cellspacing='0'>");
+            sb.append("<tr style='background-color:#76af50; color:white;'>");
+            sb.append("<th>ID</th><th>Nombre</th><th>Edad</th><th>Diagnóstico</th></tr>");
 
-            for (var p : pacientes) {
+            for (Paciente p : pacientes) {
                 sb.append("<tr>");
                 sb.append("<td>").append(p.getId()).append("</td>");
-                sb.append("<td>").append(p.getNombre()).append("</td>");
-                sb.append("<td>").append(p.getEdad()).append("</td>");
+                sb.append("<td><b>").append(p.getNombre()).append("</b></td>");
+                sb.append("<td>").append(p.getEdad() != null ? p.getEdad() + " años" : "-").append("</td>");
+                sb.append("<td>").append(p.getDiagnostico() != null ? p.getDiagnostico() : "-").append("</td>");
                 sb.append("</tr>");
             }
 
-            sb.append("</table></body></html>");
+            sb.append("</table><br>");
+            sb.append("<p><i>Total: ").append(pacientes.size()).append(" paciente(s)</i></p>");
+            sb.append("</body></html>");
 
             JOptionPane.showMessageDialog(this,
                 new JLabel(sb.toString()),
@@ -171,7 +179,7 @@ public class PanelGestion extends JPanel {
 
     private void mostrarListaCuidadores() {
         try {
-            var cuidadores = cuidadorService.listarTodos();
+            List<Cuidador> cuidadores = cuidadorService.listarTodos();
             if (cuidadores.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
                     "No hay cuidadores registrados todavia.",
@@ -180,21 +188,24 @@ public class PanelGestion extends JPanel {
                 return;
             }
 
-            StringBuilder sb = new StringBuilder("<html><body>");
+            StringBuilder sb = new StringBuilder("<html><body style='padding:10px'>");
             sb.append("<h2>Cuidadores Registrados</h2>");
-            sb.append("<table border='1' cellpadding='5'>");
-            sb.append("<tr><th>ID</th><th>Nombre</th><th>Telefono</th><th>Relacion</th></tr>");
+            sb.append("<table border='1' cellpadding='8' cellspacing='0'>");
+            sb.append("<tr style='background-color:#9c27b0; color:white;'>");
+            sb.append("<th>ID</th><th>Nombre</th><th>Teléfono</th><th>Relación</th></tr>");
 
-            for (var c : cuidadores) {
+            for (Cuidador c : cuidadores) {
                 sb.append("<tr>");
                 sb.append("<td>").append(c.getId()).append("</td>");
-                sb.append("<td>").append(c.getNombre()).append("</td>");
+                sb.append("<td><b>").append(c.getNombre()).append("</b></td>");
                 sb.append("<td>").append(c.getTelefono() != null ? c.getTelefono() : "-").append("</td>");
                 sb.append("<td>").append(c.getRelacion() != null ? c.getRelacion() : "-").append("</td>");
                 sb.append("</tr>");
             }
 
-            sb.append("</table></body></html>");
+            sb.append("</table><br>");
+            sb.append("<p><i>Total: ").append(cuidadores.size()).append(" cuidador(es)</i></p>");
+            sb.append("</body></html>");
 
             JOptionPane.showMessageDialog(this,
                 new JLabel(sb.toString()),
@@ -211,7 +222,7 @@ public class PanelGestion extends JPanel {
 
     private void mostrarListaMedicamentos() {
         try {
-            var medicamentos = medicamentoService.listarTodos();
+            List<Medicamento> medicamentos = medicamentoService.listarTodos();
             if (medicamentos.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
                     "No hay medicamentos registrados todavia.",
@@ -220,21 +231,24 @@ public class PanelGestion extends JPanel {
                 return;
             }
 
-            StringBuilder sb = new StringBuilder("<html><body>");
+            StringBuilder sb = new StringBuilder("<html><body style='padding:10px'>");
             sb.append("<h2>Medicamentos Registrados</h2>");
-            sb.append("<table border='1' cellpadding='5'>");
-            sb.append("<tr><th>ID</th><th>Nombre</th><th>Via</th><th>Unidad Dosis</th></tr>");
+            sb.append("<table border='1' cellpadding='8' cellspacing='0'>");
+            sb.append("<tr style='background-color:#ff9800; color:white;'>");
+            sb.append("<th>ID</th><th>Nombre</th><th>Vía</th><th>Unidad Dosis</th></tr>");
 
-            for (var m : medicamentos) {
+            for (Medicamento m : medicamentos) {
                 sb.append("<tr>");
                 sb.append("<td>").append(m.getId()).append("</td>");
-                sb.append("<td>").append(m.getNombreComercial()).append("</td>");
+                sb.append("<td><b>").append(m.getNombreComercial()).append("</b></td>");
                 sb.append("<td>").append(m.getVia() != null ? m.getVia() : "-").append("</td>");
                 sb.append("<td>").append(m.getUnidadDosis() != null ? m.getUnidadDosis() : "-").append("</td>");
                 sb.append("</tr>");
             }
 
-            sb.append("</table></body></html>");
+            sb.append("</table><br>");
+            sb.append("<p><i>Total: ").append(medicamentos.size()).append(" medicamento(s)</i></p>");
+            sb.append("</body></html>");
 
             JOptionPane.showMessageDialog(this,
                 new JLabel(sb.toString()),

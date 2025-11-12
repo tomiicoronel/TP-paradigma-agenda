@@ -6,6 +6,7 @@ import infra.dao.RecordatorioDAO;
 import infra.dao.impl.RecordatorioDAOImpl;
 import service.RecordatorioService;
 import shared.observer.Observer;
+import ui.panels.PanelGestion;
 import ui.panels.PanelHoy;
 import ui.panels.PanelMedicacion;
 import ui.panels.PanelHistorial;

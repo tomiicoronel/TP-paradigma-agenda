@@ -64,6 +64,30 @@ public class PacienteService {
     }
 
     /**
+     * Actualiza un paciente existente.
+     */
+    public void actualizarPaciente(Paciente paciente) {
+        if (paciente.getId() == null) {
+            throw new IllegalArgumentException("El paciente debe tener un ID");
+        }
+
+        Optional<Paciente> pacienteOpt = pacienteDAO.findById(paciente.getId());
+        if (!pacienteOpt.isPresent()) {
+            throw new IllegalArgumentException("Paciente no encontrado");
+        }
+
+        // Validar que el cuidador existe si se está asignando uno
+        if (paciente.getCuidadorId() != null) {
+            Optional<Cuidador> cuidador = cuidadorDAO.findById(paciente.getCuidadorId());
+            if (!cuidador.isPresent()) {
+                throw new IllegalArgumentException("El cuidador con ID " + paciente.getCuidadorId() + " no existe");
+            }
+        }
+
+        pacienteDAO.update(paciente);
+    }
+
+    /**
      * Actualiza las preferencias de accesibilidad de un paciente.
      */
     public void actualizarPreferencias(Long pacienteId, String nuevasPreferencias) {

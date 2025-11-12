@@ -27,13 +27,21 @@ public class CuidadorService {
      * Crea un nuevo cuidador en el sistema.
      */
     public Long crearCuidador(String nombre, String contacto) {
+        return crearCuidador(nombre, contacto, null);
+    }
+
+    /**
+     * Crea un nuevo cuidador con todos los detalles.
+     */
+    public Long crearCuidador(String nombre, String telefono, String relacion) {
         if (nombre == null || nombre.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre del cuidador es obligatorio");
         }
 
         Cuidador cuidador = new Cuidador();
         cuidador.setNombre(nombre);
-        cuidador.setContacto(contacto);
+        cuidador.setTelefono(telefono);
+        cuidador.setRelacion(relacion);
 
         return cuidadorDAO.save(cuidador);
     }
