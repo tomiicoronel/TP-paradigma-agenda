@@ -16,9 +16,14 @@ javac -d target\classes ^
   src\infra\dao\*.java ^
   src\infra\dao\impl\*.java ^
   src\shared\observer\*.java ^
+  src\controller\*.java ^
+  src\service\*.java ^
   src\ui\*.java ^
+  src\ui\panels\*.java ^
+  src\ui\forms\*.java ^
   src\ui\menu\*.java ^
-  src\ui\utils\*.java
+  src\ui\utils\*.java ^
+  src\test\*.java
 
 if errorlevel 1 (
     echo.

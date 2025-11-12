@@ -16,4 +16,8 @@ public interface RecordatorioDAO {
     List<Recordatorio> findByEstado(String estado);
     List<Recordatorio> findByPacienteId(Long pacienteId);
     List<Recordatorio> findPendientesByPacienteYFecha(Long pacienteId, LocalDateTime desde, LocalDateTime hasta);
+    List<Recordatorio> findByRangoFechas(LocalDateTime desde, LocalDateTime hasta);
+    List<Recordatorio> findProximosNMinutos(int minutos);
+    void actualizarHoraProgramada(Long id, LocalDateTime nuevaHora);
+    void cambiarEstado(Long id, String nuevoEstado);
 }

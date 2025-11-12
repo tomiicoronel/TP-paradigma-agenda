@@ -217,6 +217,88 @@ public class RecordatorioDAOImpl implements RecordatorioDAO {
         }
     }
 
+    @Override
+    public List<Recordatorio> findByRangoFechas(LocalDateTime desde, LocalDateTime hasta) {
+        String sql = "SELECT * FROM recordatorio WHERE programado_at BETWEEN ? AND ? ORDER BY programado_at ASC";
+        List<Recordatorio> lista = new ArrayList<>();
+
+        try (Connection cn = ConexionDB.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setTimestamp(1, Timestamp.valueOf(desde));
+            ps.setTimestamp(2, Timestamp.valueOf(hasta));
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                lista.add(mapRow(rs));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error buscando recordatorios por rango: " + e.getMessage(), e);
+        }
+
+        return lista;
+    }
+
+    @Override
+    public List<Recordatorio> findProximosNMinutos(int minutos) {
+        LocalDateTime ahora = LocalDateTime.now();
+        LocalDateTime limite = ahora.plusMinutes(minutos);
+
+        String sql = "SELECT * FROM recordatorio WHERE programado_at BETWEEN ? AND ? " +
+                     "AND estado IN ('PENDIENTE', 'APLAZADO') ORDER BY programado_at ASC";
+        List<Recordatorio> lista = new ArrayList<>();
+
+        try (Connection cn = ConexionDB.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setTimestamp(1, Timestamp.valueOf(ahora));
+            ps.setTimestamp(2, Timestamp.valueOf(limite));
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                lista.add(mapRow(rs));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error buscando próximos recordatorios: " + e.getMessage(), e);
+        }
+
+        return lista;
+    }
+
+    @Override
+    public void actualizarHoraProgramada(Long id, LocalDateTime nuevaHora) {
+        String sql = "UPDATE recordatorio SET programado_at = ?, actualizado_at = CURRENT_TIMESTAMP WHERE id = ?";
+
+        try (Connection cn = ConexionDB.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setTimestamp(1, Timestamp.valueOf(nuevaHora));
+            ps.setLong(2, id);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error actualizando hora programada: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void cambiarEstado(Long id, String nuevoEstado) {
+        String sql = "UPDATE recordatorio SET estado = ?, actualizado_at = CURRENT_TIMESTAMP WHERE id = ?";
+
+        try (Connection cn = ConexionDB.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setString(1, nuevoEstado);
+            ps.setLong(2, id);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error cambiando estado: " + e.getMessage(), e);
+        }
+    }
+
     private Recordatorio mapRow(ResultSet rs) throws SQLException {
         Recordatorio r = new Recordatorio();
         r.setId(rs.getLong("id"));
@@ -231,4 +313,3 @@ public class RecordatorioDAOImpl implements RecordatorioDAO {
         return r;
     }
 }
-
