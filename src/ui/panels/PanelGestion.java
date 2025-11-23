@@ -37,6 +37,7 @@ public class PanelGestion extends JPanel {
         // Titulo
         JLabel lblTitulo = new JLabel("Gestion de Datos", SwingConstants.CENTER);
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 24));
+        lblTitulo.setForeground(Color.BLACK);
         add(lblTitulo, BorderLayout.NORTH);
 
         // Panel central con botones
@@ -47,49 +48,52 @@ public class PanelGestion extends JPanel {
 
         // Seccion Pacientes
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
-        JLabel lblPacientes = new JLabel("Pacientes");
+        JLabel lblPacientes = new JLabel("👤 Pacientes");
         lblPacientes.setFont(new Font("Arial", Font.BOLD, 18));
+        lblPacientes.setForeground(Color.BLACK);
         panelCentral.add(lblPacientes, gbc);
 
         gbc.gridy = 1; gbc.gridwidth = 1;
-        JButton btnNuevoPaciente = crearBoton("+ Nuevo Paciente", new Color(76, 175, 80));
+        JButton btnNuevoPaciente = crearBoton("➕ Nuevo Paciente", new Color(76, 175, 80));
         btnNuevoPaciente.addActionListener(e -> abrirFormPaciente());
         panelCentral.add(btnNuevoPaciente, gbc);
 
         gbc.gridx = 1;
-        JButton btnListarPacientes = crearBoton("Ver Lista de Pacientes", new Color(33, 150, 243));
+        JButton btnListarPacientes = crearBoton("📋 Ver Lista de Pacientes", new Color(33, 150, 243));
         btnListarPacientes.addActionListener(e -> mostrarListaPacientes());
         panelCentral.add(btnListarPacientes, gbc);
 
         // Seccion Cuidadores
         gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 2;
-        JLabel lblCuidadores = new JLabel("Cuidadores");
+        JLabel lblCuidadores = new JLabel("👨‍⚕️ Cuidadores");
         lblCuidadores.setFont(new Font("Arial", Font.BOLD, 18));
+        lblCuidadores.setForeground(Color.BLACK);
         panelCentral.add(lblCuidadores, gbc);
 
         gbc.gridy = 3; gbc.gridwidth = 1;
-        JButton btnNuevoCuidador = crearBoton("+ Nuevo Cuidador", new Color(156, 39, 176));
+        JButton btnNuevoCuidador = crearBoton("➕ Nuevo Cuidador", new Color(156, 39, 176));
         btnNuevoCuidador.addActionListener(e -> abrirFormCuidador());
         panelCentral.add(btnNuevoCuidador, gbc);
 
         gbc.gridx = 1;
-        JButton btnListarCuidadores = crearBoton("Ver Lista de Cuidadores", new Color(103, 58, 183));
+        JButton btnListarCuidadores = crearBoton("📋 Ver Lista de Cuidadores", new Color(103, 58, 183));
         btnListarCuidadores.addActionListener(e -> mostrarListaCuidadores());
         panelCentral.add(btnListarCuidadores, gbc);
 
         // Seccion Medicamentos
         gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
-        JLabel lblMedicamentos = new JLabel("Medicamentos");
+        JLabel lblMedicamentos = new JLabel("💊 Medicamentos");
         lblMedicamentos.setFont(new Font("Arial", Font.BOLD, 18));
+        lblMedicamentos.setForeground(Color.BLACK);
         panelCentral.add(lblMedicamentos, gbc);
 
         gbc.gridy = 5; gbc.gridwidth = 1;
-        JButton btnNuevoMedicamento = crearBoton("+ Nuevo Medicamento", new Color(255, 152, 0));
+        JButton btnNuevoMedicamento = crearBoton("➕ Nuevo Medicamento", new Color(255, 152, 0));
         btnNuevoMedicamento.addActionListener(e -> abrirFormMedicamento());
         panelCentral.add(btnNuevoMedicamento, gbc);
 
         gbc.gridx = 1;
-        JButton btnListarMedicamentos = crearBoton("Ver Lista de Medicamentos", new Color(255, 193, 7));
+        JButton btnListarMedicamentos = crearBoton("📋 Ver Lista de Medicamentos", new Color(255, 193, 7));
         btnListarMedicamentos.addActionListener(e -> mostrarListaMedicamentos());
         panelCentral.add(btnListarMedicamentos, gbc);
 

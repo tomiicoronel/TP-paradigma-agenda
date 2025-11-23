@@ -7,6 +7,7 @@ import infra.dao.PacienteMedicamentoDAO;
 import infra.dao.impl.PacienteMedicamentoDAOImpl;
 import service.MedicamentoService;
 import service.PacienteService;
+import ui.forms.FormPautaMedicacion;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,6 +45,7 @@ public class PanelMedicacion extends JPanel {
 
         JLabel titulo = new JLabel("💊 Pautas de Medicación");
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
+        titulo.setForeground(Color.BLACK);
         panelSuperior.add(titulo, BorderLayout.WEST);
 
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -95,11 +97,43 @@ public class PanelMedicacion extends JPanel {
     }
 
     private void abrirFormNuevaPauta() {
-        JOptionPane.showMessageDialog(this,
-            "El formulario de pautas estará disponible próximamente.\n" +
-            "Por ahora puedes usar la CLI para crear pautas.",
-            "Función en desarrollo",
-            JOptionPane.INFORMATION_MESSAGE);
+        // Verificar que haya pacientes y medicamentos
+        try {
+            List<Paciente> pacientes = pacienteService.listarTodos();
+            List<Medicamento> medicamentos = medicamentoService.listarTodos();
+
+            if (pacientes.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                    "Primero debes registrar al menos un paciente.\n" +
+                    "Ve a la pestaña 'Gestión' → 'Nuevo Paciente'",
+                    "No hay pacientes",
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (medicamentos.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                    "Primero debes registrar al menos un medicamento.\n" +
+                    "Ve a la pestaña 'Gestión' → 'Nuevo Medicamento'",
+                    "No hay medicamentos",
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Abrir formulario
+            Frame parent = (Frame) SwingUtilities.getWindowAncestor(this);
+            FormPautaMedicacion form = new FormPautaMedicacion(parent);
+            form.setVisible(true);
+
+            // Actualizar lista después de cerrar el formulario
+            cargarPautas();
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this,
+                "Error al abrir el formulario: " + ex.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void cargarPautas() {

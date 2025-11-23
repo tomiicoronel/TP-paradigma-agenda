@@ -45,7 +45,7 @@ public class MainFrame extends JFrame implements Observer {
     }
 
     private void initUI() {
-        setTitle("Agenda Accesible - Sistema de Recordatorios");
+        setTitle("🏥 Agenda Accesible - Sistema de Recordatorios");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(1200, 800);
         setLocationRelativeTo(null);
@@ -76,7 +76,7 @@ public class MainFrame extends JFrame implements Observer {
         header.setBackground(new Color(70, 130, 180)); // Steel blue
         header.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
 
-        JLabel title = new JLabel("Agenda Accesible");
+        JLabel title = new JLabel("🏥 Agenda Accesible");
         title.setFont(new Font("Arial", Font.BOLD, 24));
         title.setForeground(Color.WHITE);
 

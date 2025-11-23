@@ -54,7 +54,8 @@ public class Main {
                     // Configurar Look and Feel del sistema
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    System.err.println("⚠️ No se pudo configurar el Look and Feel del sistema: " + e.getMessage());
+                    System.err.println("   Usando Look and Feel por defecto.");
                 }
 
                 MainFrame frame = new MainFrame(tomaService);

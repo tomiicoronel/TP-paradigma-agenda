@@ -20,6 +20,7 @@ public class PanelHistorial extends JPanel {
 
         JLabel titulo = new JLabel("Historial de Adherencia");
         titulo.setFont(new Font("Arial", Font.BOLD, 20));
+        titulo.setForeground(Color.BLACK);
 
         JLabel placeholder = new JLabel("<html><center>" +
             "Aqui podras consultar el historial de adherencia.<br><br>" +

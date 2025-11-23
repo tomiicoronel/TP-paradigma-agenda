@@ -1,272 +1,134 @@
-# 🎯 INICIO RÁPIDO - Agenda Accesible
+# ⚡ INICIO RÁPIDO - AGENDA ACCESIBLE
 
-**Última actualización:** 12 de noviembre de 2025
+## 🚀 3 PASOS PARA EJECUTAR
+
+### **PASO 1: Compilar**
+
+Abre una terminal CMD en la carpeta del proyecto y ejecuta:
+
+```batch
+compile_simple.bat
+```
+
+**Debe mostrar:**
+```
+[1/3] Limpiando directorio bin...
+[2/3] Compilando codigo fuente...
+[3/3] Compilacion exitosa!
+```
+
+### **PASO 2: Ejecutar**
+
+```batch
+run_simple.bat
+```
+
+**Debe mostrar en consola:**
+```
+=== Agenda Accesible - Iniciando ===
+→ Verificando esquema de base de datos...
+→ Iniciando servicio de recordatorios...
+→ Lanzando interfaz gráfica...
+✅ Interfaz gráfica iniciada correctamente.
+```
+
+### **PASO 3: Usar la Aplicación**
+
+Verás una ventana con 4 pestañas:
+- ⚙️ **Gestión** - Crear pacientes, cuidadores, medicamentos
+- 📅 **Hoy** - Ver recordatorios del día
+- 💊 **Medicación** - Crear pautas de medicación
+- 📊 **Historial** - Consultar adherencia
 
 ---
 
-## ✅ Estado del Proyecto
+## 🎯 FLUJO BÁSICO (Primera vez)
 
-El proyecto tiene **2 interfaces disponibles**:
-
-1. **🖥️ Interfaz Gráfica (GUI)** - Ventana Swing profesional ⭐ **RECOMENDADO**
-2. **⌨️ Interfaz de Línea de Comandos (CLI)** - Para administración y pruebas
-
----
-
-## 🚀 Ejecución Rápida
-
-### Opción 1: Interfaz Gráfica (Recomendado)
-
-```cmd
-run_gui.bat
+### 1️⃣ Crear un Cuidador
+```
+Pestaña: ⚙️ Gestión
+→ Click: "➕ Nuevo Cuidador"
+→ Llenar: Nombre, Teléfono, Relación
+→ Click: "Guardar"
 ```
 
-Esto abrirá una ventana con:
-- 📅 **Pestaña "Hoy"**: Ver y gestionar recordatorios del día
-- 💊 **Pestaña "Medicación"**: (Próximamente) Gestión de medicamentos
-- 📊 **Pestaña "Historial"**: (Próximamente) Reportes de adherencia
-
-### Opción 2: Interfaz CLI
-
-```cmd
-run_cli.bat
+### 2️⃣ Crear un Paciente
+```
+Pestaña: ⚙️ Gestión
+→ Click: "➕ Nuevo Paciente"
+→ Llenar: Nombre, Fecha (dd/MM/yyyy), Diagnóstico
+→ Seleccionar: Cuidador del combo
+→ Click: "Guardar"
 ```
 
-Para configuración inicial, pruebas y administración avanzada.
-
----
-
-## 🛠️ Compilación
-
-Si necesitas recompilar el proyecto:
-
-```cmd
-compile.bat
+### 3️⃣ Crear un Medicamento
+```
+Pestaña: ⚙️ Gestión
+→ Click: "➕ Nuevo Medicamento"
+→ Llenar: Nombre, Vía, Unidad
+→ Click: "Guardar"
 ```
 
-Esto compilará todos los archivos Java en `target\classes\`.
-
----
-
-## 📋 Primer Uso
-
-### 1. Configurar datos iniciales (usar CLI)
-
-```cmd
-run_cli.bat
+### 4️⃣ Crear Pauta de Medicación
+```
+Pestaña: 💊 Medicación
+→ Click: "➕ Nueva Pauta"
+→ Seleccionar: Paciente y Medicamento
+→ Configurar: Dosis, Intervalo (24 horas), Hora (09:00)
+→ Click: "Guardar"
 ```
 
-Luego en el menú:
-1. **Gestionar Pacientes** → Crear un paciente de prueba
-2. **Gestionar Medicamentos** → Registrar un medicamento
-3. **Configurar Pautas** → Asignar medicamento a paciente con horarios
-
-### 2. Usar la interfaz gráfica
-
-```cmd
-run_gui.bat
+### 5️⃣ Ver Recordatorios
 ```
-
-Verás:
-- Los recordatorios programados en la pestaña "Hoy"
-- Notificaciones automáticas cuando llega la hora
-- Botones para marcar como "Hecho", "Aplazar" o "Cancelar"
-
----
-
-## 🎨 Características de la GUI
-
-### Panel "Hoy"
-- ✅ **Tabla con recordatorios del día**
-  - ID, Hora programada, Estado, Descripción, Ventana de tolerancia
-- ✅ **Estadísticas en tiempo real**
-  - Total, Hechos, Pendientes, Aplazados
-- ✅ **Botones de acción:**
-  - **Marcar como Hecho**: ✅ Registra que se tomó la medicación
-  - **Aplazar**: ⏰ Pospone X minutos
-  - **Cancelar**: ❌ Cancela el recordatorio
-  - **Actualizar**: 🔄 Refresca manualmente
-
-### Notificaciones Automáticas
-- 🔔 **Popup cuando llega la hora** de un recordatorio
-- Botones rápidos: Hecho / Aplazar / Cancelar
-- Se cierra automáticamente al tomar acción
-
-### Actualización Automática
-- El **TomaService** verifica cada 60 segundos
-- Cuando detecta cambios → **notifica a la UI** automáticamente
-- Usa **patrón Observer** para mantener sincronización
-
----
-
-## 🧩 Arquitectura Implementada
-
-```
-┌─────────────────────────────────┐
-│      MainFrame (GUI)            │  ← Observer
-│  ┌──────┬──────────┬─────────┐  │
-│  │ Hoy  │ Medicac. │ Histor. │  │
-│  └──────┴──────────┴─────────┘  │
-└────────────┬────────────────────┘
-             │ update()
-             │
-┌────────────┴────────────┐
-│    TomaService          │  ← Subject (notifica cada 60s)
-│  - verifica horarios    │
-│  - emite notificaciones │
-│  - cambia estados       │
-└────────┬────────────────┘
-         │
-┌────────┴────────────┐
-│ RecordatorioService │  ← Business Logic
-│ - listar            │
-│ - marcar hecho      │
-│ - aplazar           │
-│ - cancelar          │
-└────────┬────────────┘
-         │
-┌────────┴─────────────┐
-│  RecordatorioDAO     │  ← Data Access
-└────────┬─────────────┘
-         │
-┌────────┴─────┐
-│   H2 DB      │  ← Persistencia
-└──────────────┘
+Pestaña: 📅 Hoy
+→ Ver: Recordatorios del día
+→ Click: "Marcar como tomado" (cuando corresponda)
 ```
 
 ---
 
-## 📂 Estructura del Proyecto
+## ⚠️ SOLUCIÓN RÁPIDA DE PROBLEMAS
 
+### ❌ Error: "javac no se reconoce..."
+**Solución:** Ejecuta desde IntelliJ IDEA
 ```
-src/
-├── app/
-│   └── Main.java              # Punto de entrada (GUI por defecto, --cli para CLI)
-├── domain/                    # Entidades
-├── infra/
-│   ├── dao/                   # Acceso a datos
-│   └── db/                    # Conexión y esquema
-├── service/                   # Lógica de negocio
-├── controller/
-│   └── TomaService.java       # Scheduler automático
-├── shared/observer/           # Patrón Observer
-└── ui/
-    ├── CLI.java               # Interfaz CLI
-    ├── MainFrame.java         # Ventana principal GUI
-    └── panels/
-        ├── PanelHoy.java      # Vista de recordatorios del día
-        ├── PanelMedicacion.java   # Placeholder
-        └── PanelHistorial.java    # Placeholder
+1. Abre IntelliJ
+2. Abre el proyecto
+3. Navega a: src/app/Main.java
+4. Click derecho → Run 'Main.main()'
 ```
 
----
+### ❌ Error: "Cannot find h2..."
+**Solución:** Verifica que exista `lib/h2-2.4.240.jar`
 
-## 📚 Documentación Detallada
+### ❌ La GUI no se abre
+**Solución:** Verifica que no estés usando `--cli` en los argumentos
 
-| Archivo | Descripción |
-|---------|-------------|
-| `GUI_IMPLEMENTACION.md` | Detalles de la implementación GUI |
-| `SERVICIOS_COMPLETADO.md` | Documentación de la capa de servicios |
-| `SCHEDULER_EXPLICACION.md` | Cómo funciona el TomaService |
-| `GUIA_USO_CLI.md` | Manual de uso del CLI |
-| `PROJECT_CONTEXT.md` | Contexto general del proyecto |
+### ❌ "No hay pacientes"
+**Solución:** Primero debes crear datos en la pestaña "Gestión"
 
 ---
 
-## 🎯 Próximos Pasos Recomendados
+## ✅ TODO LISTO
 
-### Funcionalidades Core (siguientes)
-1. **Implementar PanelMedicacion** con formularios CRUD
-   - Alta de medicamentos desde GUI
-   - Asignación a pacientes
-   - Configuración de pautas
+Si todo funciona, verás:
+- ✅ Ventana de la aplicación abierta
+- ✅ 4 pestañas visibles
+- ✅ Botones con íconos
+- ✅ Puedes crear y guardar datos
+- ✅ Los datos persisten al cerrar y abrir
 
-2. **Implementar PanelHistorial**
-   - Gráficos de adherencia mensual
-   - Reporte por medicamento
-   - Estadísticas de cumplimiento
-
-### Mejoras UX
-1. **Sonido en notificaciones** (javax.sound)
-2. **Colores en tabla** según estado (verde/amarillo/rojo)
-3. **Iconos visuales** en botones y pestañas
-
-### Mejoras Técnicas
-1. **Tests unitarios de UI** (mockito + junit)
-2. **Logging robusto** (SLF4J + Logback)
-3. **Configuración externa** (properties file)
+**¡Listo para entregar!** 🎉
 
 ---
 
-## ❓ FAQ - Preguntas Frecuentes
+## 📝 NOTAS
 
-### ¿Puedo usar ambas interfaces al mismo tiempo?
-No, solo una a la vez. Pero puedes cerrar una y abrir la otra sin perder datos.
-
-### ¿Dónde se guardan los datos?
-En `data/db.mv.db` (base de datos H2 embebida). Persisten entre ejecuciones.
-
-### ¿Cómo creo recordatorios de prueba?
-Usa el CLI para crear: paciente → medicamento → pauta. El TomaService creará automáticamente los recordatorios.
-
-### ¿La GUI se actualiza sola?
-Sí, cada 60 segundos el TomaService verifica cambios y notifica a la GUI.
-
-### ¿Puedo cambiar el intervalo de verificación?
-Sí, en `TomaService.java`, línea 52: `INTERVALO_VERIFICACION_SEG`
+- Los datos se guardan en: `data/db.mv.db`
+- El scheduler verifica recordatorios cada 60 segundos
+- Para resetear la BD: elimina `data/db.mv.db` y reinicia
 
 ---
 
-## 🐛 Solución de Problemas
-
-### Problema: "No se encuentran las clases compiladas"
-**Solución:** Ejecuta `compile.bat` primero.
-
-### Problema: "Error al conectar a base de datos"
-**Solución:** Verifica que `lib\h2-2.4.240.jar` exista.
-
-### Problema: No aparecen recordatorios en GUI
-**Solución:** 
-1. Usa CLI para crear datos de prueba
-2. Verifica que la pauta tenga horarios configurados
-3. Revisa que la fecha sea hoy
-
-### Problema: La ventana se cierra inmediatamente
-**Solución:** Ejecuta desde cmd (no doble-click) para ver errores.
-
----
-
-## 👨‍💻 Desarrollo
-
-### Para agregar una nueva funcionalidad:
-
-1. **Modelo (domain/)**: Crear/modificar entidad
-2. **DAO (infra/dao/)**: Agregar métodos de acceso a datos
-3. **Service (service/)**: Implementar lógica de negocio
-4. **UI (ui/panels/)**: Crear panel Swing
-5. **Actualizar MainFrame**: Agregar pestaña si es necesario
-
-### Patrones de diseño usados:
-- ✅ **MVC** (Model-View-Controller)
-- ✅ **DAO** (Data Access Object)
-- ✅ **Observer** (TomaService → MainFrame)
-- ✅ **Service Layer** (separación de lógica de negocio)
-- ✅ **Singleton** (ConexionDB con pool)
-
----
-
-## 📄 Licencia
-
-Proyecto académico - TP Paradigmas de Programación
-
----
-
-## 📞 Soporte
-
-Para consultas o problemas:
-1. Revisa la documentación en `/docs`
-2. Consulta los archivos `*_COMPLETADO.md`
-3. Revisa el código comentado en cada clase
-
-**¡Disfruta usando Agenda Accesible!** 🎉
+**Documentación completa en:** `README.md` y `PROYECTO_FINALIZADO.md`
 

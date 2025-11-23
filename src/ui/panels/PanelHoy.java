@@ -50,6 +50,7 @@ public class PanelHoy extends JPanel {
 
         JLabel titulo = new JLabel("Recordatorios de Hoy");
         titulo.setFont(new Font("Arial", Font.BOLD, 20));
+        titulo.setForeground(Color.BLACK);
 
         lblEstadisticas = new JLabel();
         lblEstadisticas.setFont(new Font("Arial", Font.PLAIN, 12));
